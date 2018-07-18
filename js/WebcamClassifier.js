@@ -90,9 +90,9 @@ class WebcamClassifier {
   }
 
   ready() {
-    let video = true;
+    let video = {width: IMAGE_SIZE, height: IMAGE_SIZE};
     if (browserUtils.isMobile) {
-      video = {facingMode: (this.options.isBackFacingCam) ? 'environment' : 'user'};
+      video = {...video, facingMode: (this.options.isBackFacingCam) ? 'environment' : 'user'};
     }
     if (this.loaded) {
       this.startTimer();
@@ -154,11 +154,6 @@ class WebcamClassifier {
     let flip = (this.options.isBackFacingCam) ? 1 : -1;
     let videoRatio = this.video.videoWidth / this.video.videoHeight;
     this.video.style.transform = 'scaleX(' + flip + ')';
-
-    // If video is taller:
-    if (videoRatio < 1) {
-      this.video.style.transform = 'scale(' + (flip * 2) + ', 2)';
-    }
   }
 
   blur() {

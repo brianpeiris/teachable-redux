@@ -2,20 +2,30 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
 		<title>teachable-redux</title>
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+
+		<link rel="stylesheet" href="index.css">
 		<script type="module" src="index.js" defer></script>
 	</head>
 	<body>
-		<button id="startButton">start</button>
-		<div id="classContainer"></div>
+		<h1>Teachable Redux</h1>
+		<button id="startButton" class="mdl-button mdl-button--raised mdl-button--accent">start</button>
+		<div id="classContainer" class="mdl-list"></div>
 		<div id="vidContainer"></div>
+
 		<template id="classTemplate">
-			<div>
-				<button class="trainButton"></button>
-				<span class="sampleCount">0</span> samples
-				<button class="resetButton">reset</button>
-				<span class="confidence"></span>
+			<div class="mdl-list__item">
+				<button class="trainButton mdl-button mdl-button--raised mdl-button--colored">train foo</button>
+				<div class="sampleInfo">
+					<div><span class="sampleCount">0</span>&nbsp;<span>samples</span></div>
+					<div><span class="confidence mdl-button mdl-button--raised mdl-button--accent"></span></div>
+				</div>
+				<button class="resetButton mdl-button mdl-button--fab"><i class="material-icons">clear</i></button>
 			</div>
 		</template>
 	</body>

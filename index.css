@@ -1,0 +1,33 @@
+html, body { width: 100%; }
+body { 
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+h1 { font-size: 30pt; margin: 0.5em 0 0.2em 0; }
+#classContainer {
+}
+.sampleInfo { 
+	margin: 0 1em;
+	width: 100px;
+	text-align: right;
+}
+.trainButton { 
+	width: 10em;
+	user-select: none;
+}
+.confidence { 
+	box-shadow: none;
+	width: 0;
+	min-width: 0;
+	padding: 0;
+	text-align: left;
+	height: 1em;
+}
+video {
+	max-height: 30vh;
+}
+
+.mdl-list__item { 
+	padding-left: 0;
+}

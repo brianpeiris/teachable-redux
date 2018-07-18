@@ -8,7 +8,7 @@ const classes = [
 const options = {
 	isBackFacingCam: false,
 	classes,
-	setConfidences: displayConfidences
+	setConfidences
 };
 const classConfidencEls = [];
 const webcamClassifier = new WebcamClassifier(options);
@@ -20,6 +20,7 @@ on(ui.startButton, 'click', () => webcamClassifier.ready());
 on(window, 'webcam-status', start);
 
 function start() {
+	startButton.style.display = 'none';
 	ui.vidContainer.append(webcamClassifier.video);
 	classes.forEach(setupClass);
 }
@@ -37,18 +38,20 @@ function setupClass(classObj, index) {
 
 	ui.classContainer.append(classUI);
 
-	classObj.sampleCallback = count => { sampleCount.textContent = count; }
-	on(trainButton, 'mousedown', () => webcamClassifier.buttonDown(name));
-	on(trainButton, 'mouseup', () => webcamClassifier.buttonUp(name));
+	classObj.sampleCallback = count => { sampleCount.textContent = count; };
+	on(trainButton, 'pointerdown', () => webcamClassifier.buttonDown(name));
+	on(trainButton, 'pointerup', () => webcamClassifier.buttonUp(name));
 	on(resetButton, 'click', () => {
 		webcamClassifier.deleteClassData(index);
 		classObj.sampleCallback(0);
 	});
 }
 
-function displayConfidences(confidences) {
+function setConfidences(confidences) {
 	for (let i = 0; i < confidences.length; i++) {
-		classConfidencEls[i].textContent = confidences[i];
+		const confidenceEl = classConfidencEls[i]
+		const  confidence = confidences[i];
+		confidenceEl.style.width = `${confidence * 100}px`;
 	}
 }
 
