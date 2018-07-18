@@ -19,14 +19,8 @@ function start() {
 function setupClass(className) {
 	const button = get(`${className}Button`);
 	const sampleCount = get(`${className}SampleCount`);
-	const noop = () => {};
-	on(button, 'mousedown', () => webcamClassifier.buttonDown(
-		className, 
-		{
-			canvas: { getContext: () => ({ putImageData: noop  }) },
-			setSamples: count => { sampleCount.textContent = count; }
-		}
-	));
+	const sampleCallback = count => { sampleCount.textContent = count; }
+	on(button, 'mousedown', () => webcamClassifier.buttonDown(className, sampleCallback));
 	on(button, 'mouseup', () => webcamClassifier.buttonUp(className));
 }
 

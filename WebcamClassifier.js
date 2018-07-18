@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/* eslint-disable camelcase, max-lines */
+import * as deeplearn from './deeplearn.js';
+const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array1D, Array2D, Array3D, NDArray, gpgpu_util, util, Scalar, Environment, environment, ENV} = deeplearn.default;
+
+import SqueezeNet from './squeezenet.js';
+
+import browserUtils from './browserUtils.js';
+
 const IMAGE_SIZE = 227;
 const INPUT_SIZE = 1000;
 const TOPK = 10;
 const CLASS_COUNT = 3;
 
 const MEASURE_TIMING_EVERY_NUM_FRAMES = 20;
-
-
-function passThrough() {
-  return 0;
-}
 
 class WebcamClassifier {
   constructor(options) {
@@ -32,9 +33,6 @@ class WebcamClassifier {
     this.video.setAttribute('autoplay', '');
     this.video.setAttribute('playsinline', '');
 
-    this.blankCanvas = document.createElement('canvas');
-    this.blankCanvas.width = 227;
-    this.blankCanvas.height = 227;
     this.timer = null;
     this.active = false;
     this.wasActive = false;
@@ -61,7 +59,7 @@ class WebcamClassifier {
     this.gpgpu = new GPGPUContext(this.gl);
     this.math = new NDArrayMathGPU(this.gpgpu);
     this.mathCPU = new NDArrayMathCPU();
-    this.currentClass = null;
+    this.currentSampleCallback = null;
     this.trainLogitsMatrix = null;
     this.squashLogitsDenominator = Scalar.new(300);
     this.measureTimingCounter = 0;
@@ -204,18 +202,16 @@ class WebcamClassifier {
     return total;
   }
 
-  buttonDown(id, learningClass) {
+  buttonDown(id, sampleCallback) {
     this.current = this.classes[id];
     this.isDown = true;
-    this.currentClass = learningClass;
+    this.currentSampleCallback = sampleCallback;
   }
 
   buttonUp(id) {
     this.isDown = false;
-
-
     this.current = null;
-    this.currentClass = null;
+    this.currentSampleCallback = null;
   }
 
   startTimer() {
@@ -242,7 +238,7 @@ class WebcamClassifier {
       });
 
       this.current.sampleCount += 1;
-      this.currentClass.setSamples(this.current.sampleCount);
+      this.currentSampleCallback(this.current.sampleCount);
 
       this.timer = requestAnimationFrame(this.animate.bind(this));
     }else if (this.getNumExamples() > 0) {
@@ -384,12 +380,4 @@ class WebcamClassifier {
   }
 }
 
-import * as deeplearn from './deeplearn.js';
-const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array1D, Array2D, Array3D, NDArray, gpgpu_util, util, Scalar, Environment, environment, ENV} = deeplearn.default;
-
-import SqueezeNet from './squeezenet.js';
-
-import browserUtils from './browserUtils.js';
-
 export default WebcamClassifier;
-/* eslint-enable camelcase, max-lines */
