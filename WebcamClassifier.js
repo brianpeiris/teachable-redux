@@ -42,11 +42,6 @@ class WebcamClassifier {
     this.latestCanvas.width = 98;
     this.latestCanvas.height = 98;
     this.latestContext = this.latestCanvas.getContext('2d');
-    this.thumbCanvas = document.createElement('canvas');
-    this.thumbCanvas.width = Math.floor(this.latestCanvas.width / 3) + 1;
-    this.thumbCanvas.height = Math.floor(this.latestCanvas.height / 3) + 1;
-    this.thumbContext = this.thumbCanvas.getContext('2d');
-    this.thumbVideoX = 0;
     this.options = options;
     this.classNames = options.classNames;
     this.images = {};
@@ -56,8 +51,7 @@ class WebcamClassifier {
         down: false,
         imagesCount: 0,
         images: [],
-        latestImages: [],
-        latestThumbs: []
+        latestImages: []
       };
     }
     this.isDown = false;
@@ -97,7 +91,6 @@ class WebcamClassifier {
       this.trainLogitsMatrix = null;
       this.classExampleCount[index] = 0;
       this.images[this.classNames[index]].imagesCount = 0;
-      this.images[this.classNames[index]].latestThumbs = [];
       this.images[this.classNames[index]].latestImages = [];
     }
   }
@@ -219,21 +212,13 @@ class WebcamClassifier {
     return total;
   }
 
-  buttonDown(id, canvas, learningClass) {
+  buttonDown(id, learningClass) {
     this.current = this.images[id];
     this.current.down = true;
     this.isDown = true;
 
-    this.videoRatio = this.video.videoWidth / this.video.videoHeight;
     this.currentClass = learningClass;
-    this.canvasWidth = canvas.width;
-    this.canvasHeight = canvas.height;
-    this.videoWidth = this.canvasHeight * this.videoRatio;
 
-    this.thumbVideoHeight = this.canvasHeight / 3;
-    this.thumbVideoWidth = this.canvasWidth / 3;
-    this.thumbVideoWidthReal = this.thumbVideoHeight * this.videoRatio;
-    this.thumbVideoX = -(this.thumbVideoWidthReal - this.thumbVideoWidth) / 2;
     this.currentContext = this.currentClass.canvas.getContext('2d');
   }
 
@@ -272,35 +257,10 @@ class WebcamClassifier {
 
       this.current.imagesCount += 1;
       this.currentClass.setSamples(this.current.imagesCount);
-      if (this.current.latestThumbs.length > 8) {
-        this.current.latestThumbs.shift();
-      }
       if (this.current.latestImages.length > 8) {
         this.current.latestImages.shift();
       }
 
-      this.thumbContext.drawImage(
-        this.video, this.thumbVideoX, 0, this.thumbVideoWidthReal,
-        this.thumbVideoHeight);
-      let data = this.thumbContext.getImageData(
-        0, 0, this.canvasWidth, this.canvasHeight);
-      this.current.latestThumbs.push(data);
-
-      let cols = 0;
-      let rows = 0;
-
-      for (let index = 0; index < this.current.latestThumbs.length; index += 1) {
-        this.currentContext.putImageData(
-          this.current.latestThumbs[index], (2 - cols) * this.thumbCanvas.width,
-          rows * this.thumbVideoHeight, 0, 0, this.thumbCanvas.width,
-          this.thumbCanvas.height);
-        if (cols === 2) {
-          rows += 1;
-          cols = 0;
-        }else {
-          cols += 1;
-        }
-      }
       this.timer = requestAnimationFrame(this.animate.bind(this));
     }else if (this.getNumExamples() > 0) {
       const numExamples = this.getNumExamples();

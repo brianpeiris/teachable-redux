@@ -23,9 +23,6 @@ function setupClass(className) {
 	on(button, 'mousedown', () => webcamClassifier.buttonDown(
 		className, 
 		{
-			width: 100, height: 100,
-		},
-		{
 			canvas: { getContext: () => ({ putImageData: noop  }) },
 			setSamples: count => { sampleCount.textContent = count; }
 		}
