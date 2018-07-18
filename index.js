@@ -1,33 +1,54 @@
-import WebcamClassifier from './WebcamClassifier.js';
+import WebcamClassifier from './js/WebcamClassifier.js';
 
+const classes = [
+	{ name: 'green', sampleCallback: null },
+	{ name: 'purple', sampleCallback: null },
+	{ name: 'orange', sampleCallback: null }
+];
 const options = {
-	classNames: ['green', 'purple', 'orange'],
 	isBackFacingCam: false,
+	classes,
 	setConfidences: displayConfidences
 };
-
+const classConfidencEls = [];
 const webcamClassifier = new WebcamClassifier(options);
 
-on(startButton, 'click', () => webcamClassifier.ready());
+const ui = ['startButton', 'classContainer', 'vidContainer', 'classTemplate' ].reduce(
+	(ui, id) => { ui[id] = document.getElementById(id); return ui; }, {});
+
+on(ui.startButton, 'click', () => webcamClassifier.ready());
 on(window, 'webcam-status', start);
 
 function start() {
-	vid.append(webcamClassifier.video);
-	options.classNames.forEach(setupClass);
+	ui.vidContainer.append(webcamClassifier.video);
+	classes.forEach(setupClass);
 }
 
-function setupClass(className) {
-	const button = get(`${className}Button`);
-	const sampleCount = get(`${className}SampleCount`);
-	const sampleCallback = count => { sampleCount.textContent = count; }
-	on(button, 'mousedown', () => webcamClassifier.buttonDown(className, sampleCallback));
-	on(button, 'mouseup', () => webcamClassifier.buttonUp(className));
+function setupClass(classObj, index) {
+	const { name } = classObj;
+
+	const classUI = document.importNode(ui.classTemplate.content, true);
+	const trainButton = get(classUI, '.trainButton');
+	const sampleCount = get(classUI, '.sampleCount');
+	const resetButton = get(classUI, '.resetButton');
+	classConfidencEls[index] = get(classUI, '.confidence');
+
+	trainButton.textContent = `train ${name}`;
+
+	ui.classContainer.append(classUI);
+
+	classObj.sampleCallback = count => { sampleCount.textContent = count; }
+	on(trainButton, 'mousedown', () => webcamClassifier.buttonDown(name));
+	on(trainButton, 'mouseup', () => webcamClassifier.buttonUp(name));
+	on(resetButton, 'click', () => {
+		webcamClassifier.deleteClassData(index);
+		classObj.sampleCallback(0);
+	});
 }
 
 function displayConfidences(confidences) {
 	for (let i = 0; i < confidences.length; i++) {
-		const className = options.classNames[i];
-		get(`${className}Confidence`).textContent = confidences[i];
+		classConfidencEls[i].textContent = confidences[i];
 	}
 }
 
@@ -35,6 +56,6 @@ function on(el, event, func) {
 	el.addEventListener(event, func);
 }
 
-function get(id) {
-	return document.getElementById(id);
+function get(el, selector) {
+	return el.querySelector(selector);
 }

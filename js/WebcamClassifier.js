@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as deeplearn from './deeplearn.js';
+// Based on https://github.com/googlecreativelab/teachable-machine/blob/cb6b8ce2/src/ai/WebcamClassifier.js
+// Removed extraneous UI code.
+
+import * as deeplearn from './vendor/deeplearn.js';
 const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array1D, Array2D, Array3D, NDArray, gpgpu_util, util, Scalar, Environment, environment, ENV} = deeplearn.default;
 
-import SqueezeNet from './squeezenet.js';
+import SqueezeNet from './vendor/squeezenet.js';
 
 import browserUtils from './browserUtils.js';
 
@@ -37,12 +40,13 @@ class WebcamClassifier {
     this.active = false;
     this.wasActive = false;
     this.options = options;
-    this.classNames = options.classNames;
+    this.classNames = options.classes.map(classObj => classObj.name);
     this.classes = {};
     for (let index = 0; index < this.classNames.length; index += 1) {
       this.classes[this.classNames[index]] = {
         index: index,
         sampleCount: 0,
+        classObj: options.classes[index]
       };
     }
     this.isDown = false;
@@ -202,10 +206,10 @@ class WebcamClassifier {
     return total;
   }
 
-  buttonDown(id, sampleCallback) {
+  buttonDown(id) {
     this.current = this.classes[id];
     this.isDown = true;
-    this.currentSampleCallback = sampleCallback;
+    this.currentSampleCallback = this.classes[id].classObj.sampleCallback;
   }
 
   buttonUp(id) {

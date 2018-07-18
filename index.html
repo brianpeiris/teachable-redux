@@ -8,9 +8,15 @@
 	</head>
 	<body>
 		<button id="startButton">start</button>
-		<div id="vid"></div>
-		<button id="greenButton">train green</button><span id="greenSampleCount">0</span>samples<span id="greenConfidence"></span><button id="greenReset">reset</button>
-		<button id="purpleButton">train purple</button><span id="purpleSampleCount">0</span>samples<span id="purpleConfidence"></span><button id="purpleReset">reset</button>
-		<button id="orangeButton">train orange</button><span id="orangeSampleCount">0</span>samples<span id="orangeConfidence"></span><button id="orangeReset">reset</button>
+		<div id="classContainer"></div>
+		<div id="vidContainer"></div>
+		<template id="classTemplate">
+			<div>
+				<button class="trainButton"></button>
+				<span class="sampleCount">0</span> samples
+				<button class="resetButton">reset</button>
+				<span class="confidence"></span>
+			</div>
+		</template>
 	</body>
 </html>
