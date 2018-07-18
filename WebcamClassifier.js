@@ -86,13 +86,6 @@ class WebcamClassifier {
       this.trainClassLogitsMatrices.push(null);
       this.classExampleCount.push(0);
     }
-
-    this.activateWebcamButton = document.getElementById('input__media__activate');
-    if (this.activateWebcamButton) {
-      this.activateWebcamButton.addEventListener('click', () => {
-        location.reload();
-      });
-    }
   }
 
   deleteClassData(index) {
@@ -123,15 +116,12 @@ class WebcamClassifier {
       navigator.mediaDevices.getUserMedia(
       {
         video: video,
-        audio: (GLOBALS.browserUtils.isChrome && !GLOBALS.browserUtils.isMobile)
       }).
       then((stream) => {
         GLOBALS.isCamGranted = true;
         if ((GLOBALS.browserUtils.isChrome && !GLOBALS.browserUtils.isMobile)) {
-          GLOBALS.audioContext.createMediaStreamSource(stream);
           GLOBALS.stream = stream;
         }
-        this.activateWebcamButton.style.display = 'none';
         this.active = true;
         this.stream = stream;
         this.video.addEventListener('loadedmetadata', this.videoLoaded.bind(this));
@@ -166,7 +156,6 @@ class WebcamClassifier {
 
         let event = new CustomEvent('webcam-status', {detail: {granted: true}});
         window.dispatchEvent(event);
-        gtag('event', 'webcam_granted');        
       }).
       catch((error) => {
         console.error(error);
@@ -176,9 +165,7 @@ class WebcamClassifier {
             error: error
           }
         });
-        this.activateWebcamButton.style.display = 'block';
         window.dispatchEvent(event);
-        gtag('event', 'webcam_denied');
       });
     }
   }
@@ -186,12 +173,6 @@ class WebcamClassifier {
   videoLoaded() {
     let flip = (GLOBALS.isBackFacingCam) ? 1 : -1;
     let videoRatio = this.video.videoWidth / this.video.videoHeight;
-    let parent = this.video.parentNode; 
-    let parentWidth = parent.offsetWidth;
-    let parentHeight = parent.offsetHeight;
-    let videoWidth = parentHeight * videoRatio;
-    this.video.style.width = videoWidth + 'px';
-    this.video.style.height = parentHeight + 'px';
     this.video.style.transform = 'scaleX(' + flip + ') translate(' + (50 * flip * -1) + '%, -50%)';
 
     // If video is taller:
