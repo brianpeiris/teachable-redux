@@ -9,8 +9,11 @@
   },
   "devDependencies": {
     "amd-to-es6": "^0.1.0",
+    "babel-eslint": "^8.2.6",
     "browser-sync": "^2.24.5",
     "deeplearn": "0.3.0",
+    "eslint": "^5.1.0",
+    "prettier": "^1.13.7",
     "rimraf": "^2.6.2",
     "webpack": "^4.16.1",
     "webpack-command": "^0.4.1"
