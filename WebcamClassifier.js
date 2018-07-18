@@ -210,10 +210,7 @@ class WebcamClassifier {
     this.current = this.images[id];
     this.current.down = true;
     this.isDown = true;
-
     this.currentClass = learningClass;
-
-    this.currentContext = this.currentClass.canvas.getContext('2d');
   }
 
   buttonUp(id) {
@@ -222,7 +219,6 @@ class WebcamClassifier {
 
 
     this.current = null;
-    this.currentContext = null;
     this.currentClass = null;
   }
 
