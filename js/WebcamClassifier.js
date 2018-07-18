@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // Based on https://github.com/googlecreativelab/teachable-machine/blob/cb6b8ce2/src/ai/WebcamClassifier.js
-// Removed extraneous UI code.
+// Removed extraneous UI code. Refactored a bit.
 
 import * as deeplearn from './vendor/deeplearn.js';
 const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array1D, Array2D, Array3D, NDArray, gpgpu_util, util, Scalar, Environment, environment, ENV} = deeplearn.default;
