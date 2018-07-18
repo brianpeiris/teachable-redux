@@ -13,7 +13,7 @@ h1 {
   margin: 0.5em 0 0.2em 0;
 }
 
-.button, #mobileWarning {
+.button {
   text-transform: uppercase;
   font-weight: 500;
   font-size: 14px;
@@ -90,4 +90,9 @@ h1 {
 video {
   max-height: 30vh;
   margin: 1em;
+}
+
+#credits {
+  position: fixed;
+  bottom: 20px;
 }
