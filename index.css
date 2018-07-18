@@ -11,6 +11,12 @@ body {
 h1 {
   font-size: 30pt;
   margin: 0.5em 0 0.2em 0;
+  text-align: center;
+}
+.subheading {
+  font-size: 12pt;
+  position: relative;
+  top: -1.5em;
 }
 
 .button {
