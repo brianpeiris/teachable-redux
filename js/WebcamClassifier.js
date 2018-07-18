@@ -15,12 +15,21 @@
 // Based on https://github.com/googlecreativelab/teachable-machine/blob/cb6b8ce2/src/ai/WebcamClassifier.js
 // Removed extraneous UI code. Refactored a bit.
 
-import * as deeplearn from './vendor/deeplearn.js';
-const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array3D, gpgpu_util, Scalar, Environment, environment} = deeplearn.default;
+import * as deeplearn from "./vendor/deeplearn.js";
+const {
+  GPGPUContext,
+  NDArrayMathCPU,
+  NDArrayMathGPU,
+  Array3D,
+  gpgpu_util,
+  Scalar,
+  Environment,
+  environment
+} = deeplearn.default;
 
-import SqueezeNet from './vendor/squeezenet.js';
+import SqueezeNet from "./vendor/squeezenet.js";
 
-import browserUtils from './browserUtils.js';
+import browserUtils from "./browserUtils.js";
 
 const IMAGE_SIZE = 227;
 const INPUT_SIZE = 1000;
@@ -32,9 +41,9 @@ const MEASURE_TIMING_EVERY_NUM_FRAMES = 20;
 class WebcamClassifier {
   constructor(options) {
     this.loaded = false;
-    this.video = document.createElement('video');
-    this.video.setAttribute('autoplay', '');
-    this.video.setAttribute('playsinline', '');
+    this.video = document.createElement("video");
+    this.video.setAttribute("autoplay", "");
+    this.video.setAttribute("playsinline", "");
 
     this.timer = null;
     this.active = false;
@@ -53,7 +62,7 @@ class WebcamClassifier {
     this.current = null;
 
     this.useFloatTextures = !browserUtils.isMobile && !browserUtils.isSafari;
-    
+
     const features = {};
     features.WEBGL_FLOAT_TEXTURE_ENABLED = this.useFloatTextures;
     const env = new Environment(features);
@@ -90,68 +99,67 @@ class WebcamClassifier {
   }
 
   ready() {
-    let video = {width: IMAGE_SIZE, height: IMAGE_SIZE};
+    let video = { width: IMAGE_SIZE, height: IMAGE_SIZE };
     if (browserUtils.isMobile) {
-      video = {...video, facingMode: (this.options.isBackFacingCam) ? 'environment' : 'user'};
+      video = {
+        ...video,
+        facingMode: this.options.isBackFacingCam ? "environment" : "user"
+      };
     }
     if (this.loaded) {
       this.startTimer();
-    }else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia(
-      {
-        video: video,
-      }).
-      then((stream) => {
-        this.active = true;
-        this.stream = stream;
-        this.video.addEventListener('loadedmetadata', this.videoLoaded.bind(this));
-        this.video.srcObject = stream;
-        if (!this.squeezeNet) {
-          this.squeezeNet = new SqueezeNet(this.gpgpu, this.math, this.useFloatTextures);
-          this.squeezeNet.loadVariables().then(() => {
-            this.math.scope(() => {
-              const warmupInput = Array3D.zeros(
-                [
-                IMAGE_SIZE,
-                IMAGE_SIZE,
-                3
-                ]
-              );
-              // Warmup
-              const inferenceResult = this.squeezeNet.infer(warmupInput);
+    } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({
+          video: video
+        })
+        .then(stream => {
+          this.active = true;
+          this.stream = stream;
+          this.video.addEventListener("loadedmetadata", this.videoLoaded.bind(this));
+          this.video.srcObject = stream;
+          if (!this.squeezeNet) {
+            this.squeezeNet = new SqueezeNet(this.gpgpu, this.math, this.useFloatTextures);
+            this.squeezeNet.loadVariables().then(() => {
+              this.math.scope(() => {
+                const warmupInput = Array3D.zeros([IMAGE_SIZE, IMAGE_SIZE, 3]);
+                // Warmup
+                const inferenceResult = this.squeezeNet.infer(warmupInput);
 
-              for (const key in inferenceResult.namedActivations) {
-                if (key in inferenceResult.namedActivations) {
-                  this.math.track(inferenceResult.namedActivations[key]);
+                for (const key in inferenceResult.namedActivations) {
+                  if (key in inferenceResult.namedActivations) {
+                    this.math.track(inferenceResult.namedActivations[key]);
+                  }
                 }
-              }
-              this.math.track(inferenceResult.logits);
+                this.math.track(inferenceResult.logits);
+              });
+
+              this.loaded = true;
+              this.wasActive = true;
+              this.startTimer();
             });
-
-            this.loaded = true;
-            this.wasActive = true;
-            this.startTimer();
-          });
-        }
-
-        let event = new CustomEvent('webcam-status', {detail: {granted: true}});
-        window.dispatchEvent(event);
-      }).
-      catch((error) => {
-        let event = new CustomEvent('webcam-status', {
-          detail: {
-            granted: false,
-            error: error
           }
+
+          let event = new CustomEvent("webcam-status", {
+            detail: { granted: true }
+          });
+          window.dispatchEvent(event);
+        })
+        .catch(error => {
+          let event = new CustomEvent("webcam-status", {
+            detail: {
+              granted: false,
+              error: error
+            }
+          });
+          window.dispatchEvent(event);
         });
-        window.dispatchEvent(event);
-      });
     }
   }
 
   videoLoaded() {
-    let flip = (this.options.isBackFacingCam) ? 1 : -1;
-    this.video.style.transform = 'scaleX(' + flip + ')';
+    let flip = this.options.isBackFacingCam ? 1 : -1;
+    this.video.style.transform = "scaleX(" + flip + ")";
   }
 
   blur() {
@@ -174,18 +182,21 @@ class WebcamClassifier {
 
     const logits = this.captureFrameSqueezeNetLogits();
     if (this.trainClassLogitsMatrices[this.current.index] === null) {
-      this.trainClassLogitsMatrices[this.current.index] =
-      this.math.keep(logits.as3D(1, INPUT_SIZE, 1));
-    }else {
+      this.trainClassLogitsMatrices[this.current.index] = this.math.keep(logits.as3D(1, INPUT_SIZE, 1));
+    } else {
       const axis = 0;
       const newTrainLogitsMatrix = this.math.concat3D(
         this.trainClassLogitsMatrices[this.current.index].as3D(
-          this.classExampleCount[this.current.index], INPUT_SIZE, 1),
-        logits.as3D(1, INPUT_SIZE, 1), axis);
+          this.classExampleCount[this.current.index],
+          INPUT_SIZE,
+          1
+        ),
+        logits.as3D(1, INPUT_SIZE, 1),
+        axis
+      );
 
       this.trainClassLogitsMatrices[this.current.index].dispose();
-      this.trainClassLogitsMatrices[this.current.index] =
-      this.math.keep(newTrainLogitsMatrix);
+      this.trainClassLogitsMatrices[this.current.index] = this.math.keep(newTrainLogitsMatrix);
     }
     this.classExampleCount[this.current.index] += 1;
   }
@@ -238,30 +249,27 @@ class WebcamClassifier {
       this.currentSampleCallback(this.current.sampleCount);
 
       this.timer = requestAnimationFrame(this.animate.bind(this));
-    }else if (this.getNumExamples() > 0) {
+    } else if (this.getNumExamples() > 0) {
       const numExamples = this.getNumExamples();
 
       let measureTimer = false;
       let start = performance.now();
       measureTimer = this.measureTimingCounter === 0;
 
-      const knn = this.math.scope((keep) => {
+      const knn = this.math.scope(keep => {
         const frameLogits = this.captureFrameSqueezeNetLogits();
 
         if (this.trainLogitsMatrix === null) {
           let newTrainLogitsMatrix = null;
 
           for (let index = 0; index < CLASS_COUNT; index += 1) {
-            newTrainLogitsMatrix = this.concat(
-              newTrainLogitsMatrix, this.trainClassLogitsMatrices[index]);
+            newTrainLogitsMatrix = this.concat(newTrainLogitsMatrix, this.trainClassLogitsMatrices[index]);
           }
 
           this.trainLogitsMatrix = keep(this.math.clone(newTrainLogitsMatrix));
         }
 
-        return this.math.matMul(
-          this.trainLogitsMatrix.as2D(numExamples, 1000),
-          frameLogits.as2D(1000, 1)).as1D();
+        return this.math.matMul(this.trainLogitsMatrix.as2D(numExamples, 1000), frameLogits.as2D(1000, 1)).as1D();
       });
 
       const computeConfidences = () => {
@@ -271,12 +279,7 @@ class WebcamClassifier {
 
         const indices = topK.indices.getValues();
 
-        const classTopKMap =
-        [
-        0,
-        0,
-        0
-        ];
+        const classTopKMap = [0, 0, 0];
         for (let index = 0; index < indices.length; index += 1) {
           classTopKMap[this.getClassFromIndex(indices[index])] += 1;
         }
@@ -299,11 +302,10 @@ class WebcamClassifier {
           this.lastFrameTimeMs = performance.now() - start;
           computeConfidences();
         });
-      }else {
+      } else {
         setTimeout(computeConfidences, this.lastFrameTimeMs);
       }
-
-    }else {
+    } else {
       this.timer = requestAnimationFrame(this.animate.bind(this));
     }
   }
@@ -323,37 +325,25 @@ class WebcamClassifier {
   concat(ndarray1, ndarray2) {
     if (ndarray1 === null) {
       return ndarray2;
-    }else if (ndarray2 === null) {
+    } else if (ndarray2 === null) {
       return ndarray1;
     }
     const axis = 0;
 
     return this.math.concat3D(
       ndarray1.as3D(ndarray1.shape[0], INPUT_SIZE, 1),
-      ndarray2.as3D(ndarray2.shape[0], INPUT_SIZE, 1), axis);
+      ndarray2.as3D(ndarray2.shape[0], INPUT_SIZE, 1),
+      axis
+    );
   }
 
   captureFrameSqueezeNetLogits() {
-    const canvasTexture =
-    this.math.getTextureManager().acquireTexture(
-      [
-      IMAGE_SIZE,
-      IMAGE_SIZE
-      ]);
+    const canvasTexture = this.math.getTextureManager().acquireTexture([IMAGE_SIZE, IMAGE_SIZE]);
     this.gpgpu.uploadPixelDataToTexture(canvasTexture, this.video);
-    const preprocessedInput =
-    this.math.track(this.squeezeNet.preprocessColorTextureToArray3D(
-      canvasTexture, 
-      [
-      IMAGE_SIZE,
-      IMAGE_SIZE
-      ]));
-    this.math.getTextureManager().releaseTexture(
-      canvasTexture, 
-      [
-      IMAGE_SIZE,
-      IMAGE_SIZE
-      ]);
+    const preprocessedInput = this.math.track(
+      this.squeezeNet.preprocessColorTextureToArray3D(canvasTexture, [IMAGE_SIZE, IMAGE_SIZE])
+    );
+    this.math.getTextureManager().releaseTexture(canvasTexture, [IMAGE_SIZE, IMAGE_SIZE]);
 
     // Infer through squeezenet.
     const inferenceResult = this.squeezeNet.infer(preprocessedInput);
@@ -364,8 +354,7 @@ class WebcamClassifier {
       }
     }
 
-    const squashedLogits = this.math.divide(
-      inferenceResult.logits, this.squashLogitsDenominator);
+    const squashedLogits = this.math.divide(inferenceResult.logits, this.squashLogitsDenominator);
 
     // Normalize to unit length
     const squared = this.math.multiplyStrict(squashedLogits, squashedLogits);
