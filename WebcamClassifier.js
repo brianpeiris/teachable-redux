@@ -40,13 +40,11 @@ class WebcamClassifier {
     this.wasActive = false;
     this.options = options;
     this.classNames = options.classNames;
-    this.images = {};
+    this.classes = {};
     for (let index = 0; index < this.classNames.length; index += 1) {
-      this.images[this.classNames[index]] = {
+      this.classes[this.classNames[index]] = {
         index: index,
-        down: false,
-        imagesCount: 0,
-        images: [],
+        sampleCount: 0,
       };
     }
     this.isDown = false;
@@ -85,7 +83,7 @@ class WebcamClassifier {
       this.trainLogitsMatrix.dispose();
       this.trainLogitsMatrix = null;
       this.classExampleCount[index] = 0;
-      this.images[this.classNames[index]].imagesCount = 0;
+      this.classes[this.classNames[index]].sampleCount = 0;
     }
   }
 
@@ -207,14 +205,12 @@ class WebcamClassifier {
   }
 
   buttonDown(id, learningClass) {
-    this.current = this.images[id];
-    this.current.down = true;
+    this.current = this.classes[id];
     this.isDown = true;
     this.currentClass = learningClass;
   }
 
   buttonUp(id) {
-    this.images[id].down = false;
     this.isDown = false;
 
 
@@ -245,8 +241,8 @@ class WebcamClassifier {
         this.saveTrainingLogits(this.current.index);
       });
 
-      this.current.imagesCount += 1;
-      this.currentClass.setSamples(this.current.imagesCount);
+      this.current.sampleCount += 1;
+      this.currentClass.setSamples(this.current.sampleCount);
 
       this.timer = requestAnimationFrame(this.animate.bind(this));
     }else if (this.getNumExamples() > 0) {
