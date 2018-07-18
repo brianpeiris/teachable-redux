@@ -1,0 +1,30 @@
+
+#glitchButton {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+}
+#glitchButton.glitchButton .glitchOpenWindowElement {
+  top: auto;
+  bottom: 100%;
+}
+#glitchButton.glitchButton .glitchButtonElement {
+  background: transparent url(https://glitch.com/edit/images/background-light/icons/up-arrow.svg) no-repeat right center
+}
+#glitchButton.glitchButton .tooltip.border {
+  top: auto;
+  bottom: -11px;
+  border-bottom: none;
+  border-top: 10px solid #000;
+}
+#glitchButton.glitchButton .tooltip.fill {
+  top: auto;
+  bottom: -9px;
+  border-bottom: none;
+  border-top: 10px solid #fff;
+}
+.githubButton {
+  position: fixed;
+  bottom: 20px;
+  right: 22px;
+}

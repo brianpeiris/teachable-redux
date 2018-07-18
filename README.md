@@ -10,4 +10,6 @@ The deep learning bits are in `js/WebcamClassifier.js`.
 
 (Note: `package.json` is renamed to `.package.json` so that Glitch doesn't choke on it.)
 
+<!-- GitHub: https://github.com/brianpeiris/teachable-redux -->
+
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/teachable-redux)

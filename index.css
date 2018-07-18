@@ -13,7 +13,7 @@ h1 {
   margin: 0.5em 0 0.2em 0;
 }
 
-#startButton, .trainButton, .resetButton, #mobileWarning {
+.button, #mobileWarning {
   text-transform: uppercase;
   font-weight: 500;
   font-size: 14px;
@@ -22,6 +22,13 @@ h1 {
   border: none;
   border-radius: 3px;
   padding: 0.7em 1em;
+  box-shadow: 0 1px 1px #909090;
+  cursor: pointer;
+}
+.button:hover {
+  box-shadow: 0 2px 2px #909090;
+}
+.button:active {
   box-shadow: 0 1px 1px #909090;
 }
 .trainButton { 
@@ -83,21 +90,4 @@ h1 {
 video {
   max-height: 30vh;
   margin: 1em;
-}
-
-#glitchButton.glitchButton .glitchOpenWindowElement {
-  top: auto;
-  bottom: 100%;
-}
-#glitchButton.glitchButton .tooltip.border {
-  top: auto;
-  bottom: -11px;
-  border-bottom: none;
-  border-top: 10px solid #000;
-}
-#glitchButton.glitchButton .tooltip.fill {
-  top: auto;
-  bottom: -9px;
-  border-bottom: none;
-  border-top: 10px solid #fff;
 }
