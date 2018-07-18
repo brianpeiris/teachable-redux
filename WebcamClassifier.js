@@ -166,11 +166,11 @@ class WebcamClassifier {
   videoLoaded() {
     let flip = (this.options.isBackFacingCam) ? 1 : -1;
     let videoRatio = this.video.videoWidth / this.video.videoHeight;
-    this.video.style.transform = 'scaleX(' + flip + ') translate(' + (50 * flip * -1) + '%, -50%)';
+    this.video.style.transform = 'scaleX(' + flip + ')';
 
     // If video is taller:
     if (videoRatio < 1) {
-      this.video.style.transform = 'scale(' + (flip * 2) + ', 2) translate(' + (flip * 20 * -1) + '%, -30%)';
+      this.video.style.transform = 'scale(' + (flip * 2) + ', 2)';
     }
   }
 

@@ -12,7 +12,7 @@ on(startButton, 'click', () => webcamClassifier.ready());
 on(window, 'webcam-status', start);
 
 function start() {
-	vid.srcObject = webcamClassifier.stream;
+	vid.append(webcamClassifier.video);
 	options.classNames.forEach(setupClass);
 }
 
