@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-		<title>teachable-redux</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+    <title>teachable-redux</title>
 
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-		<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
 
-		<link rel="stylesheet" href="index.css">
-		<link rel="stylesheet" href="remix-fork.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="remix-fork.css">
     
-		<script type="module" src="index.js" defer></script>
-	</head>
-	<body>
-		<h1>Teachable Redux</h1>
+    <script type="module" src="index.js" defer></script>
+  </head>
+  <body>
+    <h1>Teachable Redux</h1>
 
-		<span id="mobileWarning" class="button"><i class="material-icons">warning</i>
-			TensorFlow.js is very slow on mobile devices
-		</span>
+    <span id="mobileWarning" class="button"><i class="material-icons">warning</i>
+      TensorFlow.js is very slow on mobile devices
+    </span>
 
-		<button id="startButton" class="button">start</button>
+    <button id="startButton" class="button">start</button>
 
-		<ol id="classContainer"></ol>
+    <ol id="classContainer"></ol>
 
-		<div id="vidContainer"></div>
+    <div id="vidContainer"></div>
     
     <span id="credits">
       Based on 
@@ -34,23 +34,23 @@
       </a>
     </span>
 
-		<template id="classTemplate">
-			<li class="class">
-				<button class="trainButton button">train foo</button>
-				<div class="sampleInfo">
-					<div><span class="sampleCount">0</span>&nbsp;<span>samples</span></div>
-					<div class="confidenceContainer"><div class="confidence"></div></div>
-				</div>
-				<button class="resetButton button"><i class="material-icons">clear</i></button>
-			</li>
-		</template>
+    <template id="classTemplate">
+      <li class="class">
+        <button class="trainButton button">train foo</button>
+        <div class="sampleInfo">
+          <div><span class="sampleCount">0</span>&nbsp;<span>samples</span></div>
+          <div class="confidenceContainer"><div class="confidence"></div></div>
+        </div>
+        <button class="resetButton button"><i class="material-icons">clear</i></button>
+      </li>
+    </template>
     
     <script src="https://button.glitch.me/button.js" async defer></script>
     <div id="glitchButton" class="glitchButton"></div>
     <script src="https://buttons.github.io/buttons.js" async defer></script>
     <div class="githubButton">
       <a class="github-button" href="https://github.com/brianpeiris/teachable-redux/fork" 
-         data-size="large" aria-label="Fork brianpeiris/teachable-redux on GitHub">Fork</a>
+        data-size="large" aria-label="Fork brianpeiris/teachable-redux on GitHub">Fork</a>
     </div>
-	</body>
+  </body>
 </html>
