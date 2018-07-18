@@ -26,7 +26,7 @@ function passThrough() {
 }
 
 class WebcamClassifier {
-  constructor() {
+  constructor(options) {
     this.loaded = false;
     this.video = document.createElement('video');
     this.video.setAttribute('autoplay', '');
@@ -47,7 +47,8 @@ class WebcamClassifier {
     this.thumbCanvas.height = Math.floor(this.latestCanvas.height / 3) + 1;
     this.thumbContext = this.thumbCanvas.getContext('2d');
     this.thumbVideoX = 0;
-    this.classNames = GLOBALS.classNames;
+    this.options = options;
+    this.classNames = options.classNames;
     this.images = {};
     for (let index = 0; index < this.classNames.length; index += 1) {
       this.images[this.classNames[index]] = {
@@ -62,7 +63,7 @@ class WebcamClassifier {
     this.isDown = false;
     this.current = null;
 
-    this.useFloatTextures = !GLOBALS.browserUtils.isMobile && !GLOBALS.browserUtils.isSafari;
+    this.useFloatTextures = !browserUtils.isMobile && !browserUtils.isSafari;
     
     const features = {};
     features.WEBGL_FLOAT_TEXTURE_ENABLED = this.useFloatTextures;
@@ -89,7 +90,6 @@ class WebcamClassifier {
   }
 
   deleteClassData(index) {
-    GLOBALS.clearing = true;
     if (this.trainClassLogitsMatrices[index]) {
       this.trainClassLogitsMatrices[index].dispose();
       this.trainClassLogitsMatrices[index] = null;
@@ -100,15 +100,12 @@ class WebcamClassifier {
       this.images[this.classNames[index]].latestThumbs = [];
       this.images[this.classNames[index]].latestImages = [];
     }
-    setTimeout(() => {
-        GLOBALS.clearing = false;
-    }, 300);
   }
 
   ready() {
     let video = true;
-    if (GLOBALS.browserUtils.isMobile) {
-      video = {facingMode: (GLOBALS.isBackFacingCam) ? 'environment' : 'user'};
+    if (browserUtils.isMobile) {
+      video = {facingMode: (this.options.isBackFacingCam) ? 'environment' : 'user'};
     }
     if (this.loaded) {
       this.startTimer();
@@ -118,10 +115,6 @@ class WebcamClassifier {
         video: video,
       }).
       then((stream) => {
-        GLOBALS.isCamGranted = true;
-        if ((GLOBALS.browserUtils.isChrome && !GLOBALS.browserUtils.isMobile)) {
-          GLOBALS.stream = stream;
-        }
         this.active = true;
         this.stream = stream;
         this.video.addEventListener('loadedmetadata', this.videoLoaded.bind(this));
@@ -171,7 +164,7 @@ class WebcamClassifier {
   }
 
   videoLoaded() {
-    let flip = (GLOBALS.isBackFacingCam) ? 1 : -1;
+    let flip = (this.options.isBackFacingCam) ? 1 : -1;
     let videoRatio = this.video.videoWidth / this.video.videoHeight;
     this.video.style.transform = 'scaleX(' + flip + ') translate(' + (50 * flip * -1) + '%, -50%)';
 
@@ -359,14 +352,14 @@ class WebcamClassifier {
           confidences[index] = probability;
         }
 
-        GLOBALS.learningSection.setConfidences(confidences);
+        this.options.setConfidences(confidences);
 
         this.measureTimingCounter = (this.measureTimingCounter + 1) % MEASURE_TIMING_EVERY_NUM_FRAMES;
 
         this.timer = requestAnimationFrame(this.animate.bind(this));
       };
 
-      if (!GLOBALS.browserUtils.isSafari || measureTimer || !GLOBALS.browserUtils.isMobile) {
+      if (!browserUtils.isSafari || measureTimer || !browserUtils.isMobile) {
         knn.getValuesAsync().then(() => {
           this.lastFrameTimeMs = performance.now() - start;
           computeConfidences();
@@ -451,8 +444,9 @@ class WebcamClassifier {
 import * as deeplearn from './deeplearn.js';
 const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array1D, Array2D, Array3D, NDArray, gpgpu_util, util, Scalar, Environment, environment, ENV} = deeplearn.default;
 
-import GLOBALS from './config.js';
 import SqueezeNet from './squeezenet.js';
+
+import browserUtils from './browserUtils.js';
 
 export default WebcamClassifier;
 /* eslint-enable camelcase, max-lines */
