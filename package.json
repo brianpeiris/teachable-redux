@@ -1,0 +1,10 @@
+{
+  "name": "teachable-redux",
+  "private": true,
+  "scripts": {
+    "start": "browser-sync start --server --no-open --no-notify --watch --files ."
+  },
+  "devDependencies": {
+    "browser-sync": "^2.24.5"
+  }
+}
