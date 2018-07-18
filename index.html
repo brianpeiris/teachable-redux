@@ -14,19 +14,26 @@
 	</head>
 	<body>
 		<h1>Teachable Redux</h1>
-		<button id="startButton" class="mdl-button mdl-button--raised mdl-button--accent">start</button>
-		<div id="classContainer" class="mdl-list"></div>
+
+		<span id="mobileWarning"><i class="material-icons">warning</i>
+			TensorFlow.js is very slow on mobile devices
+		</span>
+
+		<button id="startButton">start</button>
+
+		<ol id="classContainer"></ol>
+
 		<div id="vidContainer"></div>
 
 		<template id="classTemplate">
-			<div class="mdl-list__item">
-				<button class="trainButton mdl-button mdl-button--raised mdl-button--colored">train foo</button>
+			<li>
+				<button class="trainButton">train foo</button>
 				<div class="sampleInfo">
 					<div><span class="sampleCount">0</span>&nbsp;<span>samples</span></div>
-					<div><span class="confidence mdl-button mdl-button--raised mdl-button--accent"></span></div>
+					<div class="confidenceContainer"><div class="confidence"></div></div>
 				</div>
-				<button class="resetButton mdl-button mdl-button--fab"><i class="material-icons">clear</i></button>
-			</div>
+				<button class="resetButton"><i class="material-icons">clear</i></button>
+			</li>
 		</template>
 	</body>
 </html>

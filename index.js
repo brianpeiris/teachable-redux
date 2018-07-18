@@ -1,9 +1,10 @@
 import WebcamClassifier from './js/WebcamClassifier.js';
+import browserUtils from './js/browserUtils.js';
 
 const classes = [
-	{ name: 'green', sampleCallback: null },
-	{ name: 'purple', sampleCallback: null },
-	{ name: 'orange', sampleCallback: null }
+	{ name: 'one', sampleCallback: null },
+	{ name: 'two', sampleCallback: null },
+	{ name: 'three', sampleCallback: null }
 ];
 const options = {
 	isBackFacingCam: false,
@@ -13,8 +14,9 @@ const options = {
 const classConfidencEls = [];
 const webcamClassifier = new WebcamClassifier(options);
 
-const ui = ['startButton', 'classContainer', 'vidContainer', 'classTemplate' ].reduce(
-	(ui, id) => { ui[id] = document.getElementById(id); return ui; }, {});
+const ui = [
+	'startButton', 'classContainer', 'vidContainer', 'classTemplate', 'mobileWarning'
+].reduce((ui, id) => { ui[id] = document.getElementById(id); return ui; }, {});
 
 on(ui.startButton, 'click', () => webcamClassifier.ready());
 on(window, 'webcam-status', start);
@@ -54,6 +56,11 @@ function setConfidences(confidences) {
 		confidenceEl.style.width = `${confidence * 100}px`;
 	}
 }
+
+if (browserUtils.isMobile) {
+	mobileWarning.style.display = 'block';
+}
+on(ui.mobileWarning, 'click', () => mobileWarning.style.display = 'none');
 
 function on(el, event, func) {
 	el.addEventListener(event, func);
