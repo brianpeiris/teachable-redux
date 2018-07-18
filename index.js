@@ -19,8 +19,12 @@ const ui = ["startButton", "classContainer", "vidContainer", "classTemplate", "m
   return ui;
 }, {});
 
-on(ui.startButton, "click", () => webcamClassifier.ready());
-on(window, "webcam-status", start);
+on(ui.startButton, "click", () => {
+  ui.startButton.disabled = true;
+  ui.startButton.textContent = "loading...";
+  webcamClassifier.ready();
+});
+on(window, "classifier-loaded", start);
 
 function start() {
   ui.startButton.style.display = "none";

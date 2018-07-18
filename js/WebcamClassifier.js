@@ -137,6 +137,8 @@ class WebcamClassifier {
               this.loaded = true;
               this.wasActive = true;
               this.startTimer();
+              let event = new CustomEvent("classifier-loaded");
+              window.dispatchEvent(event);
             });
           }
 

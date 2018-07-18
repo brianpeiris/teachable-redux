@@ -12,11 +12,12 @@ h1 {
   font-size: 30pt;
   margin: 0.5em 0 0 0;
   text-align: center;
+  line-height: 1;
 }
 .subheading {
   font-size: 12pt;
   position: relative;
-  top: -1.5em;
+  top: -0.5em;
 }
 
 .button {
@@ -36,6 +37,9 @@ h1 {
 }
 .button:active {
   box-shadow: 0 1px 1px #909090;
+}
+.button[disabled] {
+  background: grey;
 }
 .trainButton { 
   width: 10em;
@@ -100,5 +104,5 @@ video {
 
 #credits {
   position: fixed;
-  bottom: 20px;
+  bottom: 10px;
 }
