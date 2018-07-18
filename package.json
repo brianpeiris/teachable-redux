@@ -2,9 +2,17 @@
   "name": "teachable-redux",
   "private": true,
   "scripts": {
-    "start": "browser-sync start --server --no-open --no-notify --watch --files ."
+    "start": "browser-sync start --server --https --no-open --no-notify --watch --files .",
+    "build-deeplearn-amd": "webpack --run-dev --entry ./node_modules/deeplearn/dist/index.js --output-library --output-library-target amd --output deeplearn.amd.js",
+    "build-deeplearn-module": "amdtoes6 deeplearn.amd.js > deeplearn.js",
+    "build-deeplearn": "npm run build-deeplearn-amd && npm run build-deeplearn-module && rimraf deeplearn.amd.js"
   },
   "devDependencies": {
-    "browser-sync": "^2.24.5"
+    "amd-to-es6": "^0.1.0",
+    "browser-sync": "^2.24.5",
+    "deeplearn": "0.3.14",
+    "rimraf": "^2.6.2",
+    "webpack": "^4.16.1",
+    "webpack-command": "^0.4.1"
   }
 }
