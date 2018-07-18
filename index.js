@@ -8,24 +8,14 @@ const options = {
 
 const webcamClassifier = new WebcamClassifier(options);
 
-on(start, 'click', () => webcamClassifier.ready());
-on(window, 'webcam-status', go);
+on(startButton, 'click', () => webcamClassifier.ready());
+on(window, 'webcam-status', start);
 
-const canvas = document.createElement('canvas');
-function go() {
-	on(vid, 'loadedmetadata', () => {
-		canvas.width = vid.videoWidth;
-		canvas.height = vid.videoHeight;
-	});
+function start() {
 	vid.srcObject = webcamClassifier.stream;
 	options.classNames.forEach(setupClass);
 }
 
-function get(id) {
-	return document.getElementById(id);
-}
-
-const ctx = canvas.getContext('2d');
 function setupClass(className) {
 	const button = get(`${className}Button`);
 	const sampleCount = get(`${className}SampleCount`);
@@ -52,4 +42,8 @@ function displayConfidences(confidences) {
 
 function on(el, event, func) {
 	el.addEventListener(event, func);
+}
+
+function get(id) {
+	return document.getElementById(id);
 }
