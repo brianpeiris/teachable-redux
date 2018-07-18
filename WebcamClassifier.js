@@ -38,10 +38,6 @@ class WebcamClassifier {
     this.timer = null;
     this.active = false;
     this.wasActive = false;
-    this.latestCanvas = document.createElement('canvas');
-    this.latestCanvas.width = 98;
-    this.latestCanvas.height = 98;
-    this.latestContext = this.latestCanvas.getContext('2d');
     this.options = options;
     this.classNames = options.classNames;
     this.images = {};
@@ -51,7 +47,6 @@ class WebcamClassifier {
         down: false,
         imagesCount: 0,
         images: [],
-        latestImages: []
       };
     }
     this.isDown = false;
@@ -91,7 +86,6 @@ class WebcamClassifier {
       this.trainLogitsMatrix = null;
       this.classExampleCount[index] = 0;
       this.images[this.classNames[index]].imagesCount = 0;
-      this.images[this.classNames[index]].latestImages = [];
     }
   }
 
@@ -257,9 +251,6 @@ class WebcamClassifier {
 
       this.current.imagesCount += 1;
       this.currentClass.setSamples(this.current.imagesCount);
-      if (this.current.latestImages.length > 8) {
-        this.current.latestImages.shift();
-      }
 
       this.timer = requestAnimationFrame(this.animate.bind(this));
     }else if (this.getNumExamples() > 0) {
