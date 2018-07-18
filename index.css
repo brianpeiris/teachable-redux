@@ -51,11 +51,11 @@ h1 {
   vertical-align: middle;
 }
 
-ol {
+#classContainer {
   padding: 0;
   margin: 0;
 }
-li {
+.class {
   list-style-type: none;
   display: flex;
   margin: 1em;
@@ -66,7 +66,7 @@ li {
   width: 100px;
   text-align: right;
 }
-span { 
+.sampleInfo span { 
   font-size: 16px;
   padding: 1em 0.1em;
 }
@@ -83,4 +83,21 @@ span {
 video {
   max-height: 30vh;
   margin: 1em;
+}
+
+#glitchButton.glitchButton .glitchOpenWindowElement {
+  top: auto;
+  bottom: 100%;
+}
+#glitchButton.glitchButton .tooltip.border {
+  top: auto;
+  bottom: -11px;
+  border-bottom: none;
+  border-top: 10px solid #000;
+}
+#glitchButton.glitchButton .tooltip.fill {
+  top: auto;
+  bottom: -9px;
+  border-bottom: none;
+  border-top: 10px solid #fff;
 }

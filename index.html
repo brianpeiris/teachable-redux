@@ -11,6 +11,7 @@
 
 		<link rel="stylesheet" href="index.css">
 		<script type="module" src="index.js" defer></script>
+    
 	</head>
 	<body>
 		<h1>Teachable Redux</h1>
@@ -25,8 +26,9 @@
 
 		<div id="vidContainer"></div>
 
+    
 		<template id="classTemplate">
-			<li>
+			<li class="class">
 				<button class="trainButton">train foo</button>
 				<div class="sampleInfo">
 					<div><span class="sampleCount">0</span>&nbsp;<span>samples</span></div>
@@ -35,5 +37,8 @@
 				<button class="resetButton"><i class="material-icons">clear</i></button>
 			</li>
 		</template>
+    
+    <script src="https://button.glitch.me/button.js" defer></script>
+    <div id="glitchButton" class="glitchButton" style="position:fixed;bottom:20px;right:20px;"></div>
 	</body>
 </html>
