@@ -16,7 +16,7 @@
 // Removed extraneous UI code. Refactored a bit.
 
 import * as deeplearn from './vendor/deeplearn.js';
-const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array1D, Array2D, Array3D, NDArray, gpgpu_util, util, Scalar, Environment, environment, ENV} = deeplearn.default;
+const {GPGPUContext, NDArrayMathCPU, NDArrayMathGPU, Array3D, gpgpu_util, Scalar, Environment, environment} = deeplearn.default;
 
 import SqueezeNet from './vendor/squeezenet.js';
 
@@ -138,7 +138,6 @@ class WebcamClassifier {
         window.dispatchEvent(event);
       }).
       catch((error) => {
-        console.error(error);
         let event = new CustomEvent('webcam-status', {
           detail: {
             granted: false,
@@ -152,7 +151,6 @@ class WebcamClassifier {
 
   videoLoaded() {
     let flip = (this.options.isBackFacingCam) ? 1 : -1;
-    let videoRatio = this.video.videoWidth / this.video.videoHeight;
     this.video.style.transform = 'scaleX(' + flip + ')';
   }
 
@@ -207,7 +205,7 @@ class WebcamClassifier {
     this.currentSampleCallback = this.classes[id].classObj.sampleCallback;
   }
 
-  buttonUp(id) {
+  buttonUp() {
     this.isDown = false;
     this.current = null;
     this.currentSampleCallback = null;
@@ -267,7 +265,6 @@ class WebcamClassifier {
       });
 
       const computeConfidences = () => {
-        const values = knn.getValues();
         const kVal = Math.min(TOPK, numExamples);
         const topK = this.mathCPU.topK(knn, kVal);
         knn.dispose();

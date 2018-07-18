@@ -22,7 +22,7 @@ on(ui.startButton, 'click', () => webcamClassifier.ready());
 on(window, 'webcam-status', start);
 
 function start() {
-	startButton.style.display = 'none';
+	ui.startButton.style.display = 'none';
 	ui.vidContainer.append(webcamClassifier.video);
 	classes.forEach(setupClass);
 }
@@ -58,9 +58,9 @@ function setConfidences(confidences) {
 }
 
 if (browserUtils.isMobile) {
-	mobileWarning.style.display = 'block';
+	ui.mobileWarning.style.display = 'block';
 }
-on(ui.mobileWarning, 'click', () => mobileWarning.style.display = 'none');
+on(ui.mobileWarning, 'click', () => ui.mobileWarning.style.display = 'none');
 
 function on(el, event, func) {
 	el.addEventListener(event, func);
